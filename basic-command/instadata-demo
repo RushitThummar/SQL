@@ -1,0 +1,127 @@
+-- ( create new database if not exist)
+CREATE DATABASE IF NOT EXISTS Instagram_;
+-- (use for database)
+USE Instagram_;
+
+-- (use for creating table)
+CREATE TABLE user(
+id INT,
+age INT,
+name VARCHAR(30) NOT NULL,-- ( no null value allow)
+email VARCHAR(50) UNIQUE,-- (all user have can diffrent email )
+follower INT DEFAULT 0,-- (set as 0 in strating)
+following INT,
+CONSTRAINT age_check CHECK(age>=18),-- (age is must grater than 18 to use instagram)
+PRIMARY KEY(id)
+);
+-- (to insert data inside table)
+INSERT INTO user
+(id,age,name,email,follower,following)
+VALUES
+(101,19,"rushit","rushit@gmail.com",250,200),
+(102,20,"jay","jay@gmail.com",230,170),
+(103,20,"ram","ram@gmail.com",350,230),
+(104,18,"harsh","harsh@gmail.com",150,300);
+-- (print all user table)
+SELECT * FROM user;
+INSERT INTO user
+(id,age,name,email,follower,following)
+VALUES
+(105,21,"abc","abc@gmail.com",230,230);
+
+-- (DIFFRENT CLAUSE)
+-- (print user have follower >200)
+SELECT * 
+FROM user
+WHERE follower>=200;
+-- (print user who have age=18 and follower>200)
+SELECT name,age,following
+FROM user
+WHERE age+1=21 AND following>200;
+-- ( print age between 18-19)
+SELECT name,age
+FROM user
+WHERE age BETWEEN 18 AND 19;
+-- (limit clause print only first 2 user data)
+SELECT id,name,age
+FROM user
+LIMIT 2;
+-- (sorting follower based on decending order)
+SELECT name,follower
+FROM user
+ORDER BY follower DESC;
+-- (select big max follower)
+SELECT max(follower)
+FROM user;
+-- ( how many user age is 20?ans-2)
+SELECT count(age)
+FROM user
+WHERE age=20;
+-- (give count base on diffrent age group whos age>18)
+SELECT count(id),age
+FROM user
+GROUP BY age
+HAVING age>18;
+
+
+-- (TABLE QUERY)
+-- (write to update operation make 0 from 1)
+SET SQL_SAFE_UPDATES=0;
+-- (update  follower of age have 18)
+UPDATE user
+SET follower=300
+WHERE age=18;
+SELECT*FROM user;
+-- (delete who age is 21|if connect with forign key can not delete)
+DELETE FROM user
+WHERE age=21;
+SELECT*FROM user;
+
+-- (Alter oepration on Table)
+-- (ADD column)
+ALTER TABLE user
+ADD COLUMN city VARCHAR(50) DEFAULT "ahmedabad";
+SELECT*FROM user;
+-- (Drop column)
+ALTER TABLE user
+DROP COLUMN age;
+SELECT*FROM user;
+-- (Rename Table)
+ALTER TABLE user
+RENAME TO instauser;
+SELECT*FROM instauser;
+ALTER TABLE instauser
+RENAME TO user;
+-- (change column (rename))
+ALTER TABLE user
+CHANGE COLUMN follower subscriber INT DEFAULT 0;
+SELECT*FROM user;
+-- (modify column (datatype/constraints)
+ALTER TABLE user
+MODIFY subscriber INT DEFAULT 5;
+
+-- (Truncate to remove all data from table|if table connect with forign key we could not remove data)
+TRUNCATE TABLE user;
+
+-- (create second table)
+CREATE TABLE post(
+id INT PRIMARY KEY,
+content VARCHAR(100),
+user_id INT,
+FOREIGN KEY (user_id) REFERENCES user(id) -- (define forign key)
+);
+
+INSERT INTO post
+(id,content,user_id)
+VALUES
+(01,"jay swaminaryan",101),
+(02,"hellow",102),
+(03,"jay shree ram",103),
+(04,"hey!",104);
+
+SELECT * FROM post;
+
+-- (give data which not in (bracate))
+SELECT content,id
+FROM post
+WHERE content NOT IN("hellow","hey!");
